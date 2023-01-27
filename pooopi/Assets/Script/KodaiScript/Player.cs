@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     private bool isJumping = false;
     public bool isSraidhing = false;
 
+    float hori = 0;
+    int horiOneInput = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,16 +39,21 @@ public class Player : MonoBehaviour
         Operation();
         suraidhing();
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping) //空中でジャンプ出来なくした
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0") && !isJumping && !isSraidhing) //空中でジャンプ出来なくした
         {
             rb.velocity = Vector3.up * jumpPower;
             isJumping = true;
+        }else if(Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown("joystick button 0") && !isJumping && isSraidhing)
+        {
+            rb.velocity = Vector3.up * jumpPower * 1.5f;
+            isJumping = true;
+            isSraidhing = false;
         }
     }
 
     async void suraidhing()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && !isSraidhing)
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown("joystick button 1") && !isSraidhing && !isJumping)
         {
             isSraidhing = true;
             speed = 0.2f;
@@ -59,12 +67,22 @@ public class Player : MonoBehaviour
 
     void Operation()
     {
-        if (Input.GetKeyDown(KeyCode.A) && transform.position.z < 3.0f) //左
+        hori = Input.GetAxis("Horizontal");
+        if(hori >= 0.3 || hori <= -0.3)
+        {
+            horiOneInput++;
+        }
+        else
+        {
+            horiOneInput = 0;
+        }
+
+        if (Input.GetKeyDown(KeyCode.A) || hori <= -0.3 && horiOneInput == 1 && transform.position.z < 3.0f) //左
         {
             transform.position += transform.forward * 3.0f;
         }
 
-        if (Input.GetKeyDown(KeyCode.D) && transform.position.z > -3.0f) //右
+        if (Input.GetKeyDown(KeyCode.D) || hori >= 0.3 && horiOneInput == 1 && transform.position.z > -3.0f) //右
         {
             transform.position -= transform.forward * 3.0f;
         }
