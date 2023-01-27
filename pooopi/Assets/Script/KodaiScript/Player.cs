@@ -94,5 +94,9 @@ public class Player : MonoBehaviour
         {
             isJumping = false;
         }
+        if (collision.gameObject.CompareTag("Gimic"))
+        {
+            Debug.Log("Hit");
+        }
     }
 }
