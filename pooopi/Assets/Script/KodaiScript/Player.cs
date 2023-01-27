@@ -36,16 +36,21 @@ public class Player : MonoBehaviour
         Operation();
         suraidhing();
 
-        if (Input.GetKeyDown(KeyCode.Space) && !isJumping) //空中でジャンプ出来なくした
+        if (Input.GetKeyDown(KeyCode.Space) && !isJumping && !isSraidhing) //空中でジャンプ出来なくした
         {
             rb.velocity = Vector3.up * jumpPower;
             isJumping = true;
+        }else if(Input.GetKeyDown(KeyCode.Space) && !isJumping && isSraidhing)
+        {
+            rb.velocity = Vector3.up * jumpPower * 1.5f;
+            isJumping = true;
+            isSraidhing = false;
         }
     }
 
     async void suraidhing()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && !isSraidhing)
+        if (Input.GetKeyDown(KeyCode.Q) && !isSraidhing && !isJumping)
         {
             isSraidhing = true;
             speed = 0.2f;
